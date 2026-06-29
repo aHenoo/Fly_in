@@ -6,10 +6,10 @@ install:
 	uv sync
 
 run:
-	$(PYTHON) -m src
+	$(PYTHON) main.py maps/easy/01_linear_path.txt
 
 debug:
-	$(PYTHON) -m pdb -m src
+	$(PYTHON) -m pdb main.py maps/easy/01_linear_path.txt
 
 clean:
 	find . -type d -name "__pycache__" -prune -exec rm -rf {} +
