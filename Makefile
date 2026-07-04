@@ -1,15 +1,16 @@
-PYTHON := uv run python
+PYTHON := python3
+MAP := maps/easy/01_linear_path.txt
 
-.PHONY: install run debug clean lint lint-strict
+.PHONY: install run debug clean lint lint-strict fclean
 
 install:
-	uv sync
+	$(PYTHON) -m pip install -e ".[dev]"
 
 run:
-	$(PYTHON) main.py maps/easy/01_linear_path.txt
+	$(PYTHON) main.py $(MAP)
 
 debug:
-	$(PYTHON) -m pdb main.py maps/easy/01_linear_path.txt
+	$(PYTHON) -m pdb main.py $(MAP)
 
 clean:
 	find . -type d -name "__pycache__" -prune -exec rm -rf {} +
@@ -27,9 +28,9 @@ fclean:
 	find . -type f -name "uv.lock" -delete
 
 lint:
-	uv run flake8 src/
-	uv run mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
+	$(PYTHON) -m flake8 .
+	$(PYTHON) -m mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
 lint-strict:
-	uv run flake8 src/
-	uv run mypy . --strict
+	$(PYTHON) -m flake8 .
+	$(PYTHON) -m mypy . --strict
