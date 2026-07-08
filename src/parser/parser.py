@@ -1,5 +1,3 @@
-"""Parser des fichiers de carte."""
-
 from __future__ import annotations
 
 from pathlib import Path
@@ -127,18 +125,33 @@ class Parser:
             line_number,
         )
         color = metadata.get("color")
-        max_drones = self._parse_positive_int(
-            metadata.get("max_drones", "1"),
-            line_number,
-            "max_drones",
-        )
+        is_start = prefix == "start_hub:"
+        is_end = prefix == "end_hub:"
+        max_drones = self._parse_max_drones(metadata, line_number, is_start,
+                                            is_end)
 
         try:
             zone = Zone(name, x, y, zone_type, color, max_drones, metadata)
         except ValueError as error:
             self._line_error(line_number, str(error))
 
-        return zone, prefix == "start_hub:", prefix == "end_hub:"
+        return zone, is_start, is_end
+
+    def _parse_max_drones(
+        self,
+        metadata: dict[str, str],
+        line_number: int,
+        is_start: bool,
+        is_end: bool,
+    ) -> int:
+        """Parse max_drones, ignore sur start/end."""
+        if is_start or is_end:
+            return 1
+        return self._parse_positive_int(
+            metadata.get("max_drones", "1"),
+            line_number,
+            "max_drones",
+        )
 
     def _get_zone_prefix(self, line: str, line_number: int) -> str:
         """Renvoie le prefixe de zone."""

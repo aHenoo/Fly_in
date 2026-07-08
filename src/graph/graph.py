@@ -1,5 +1,3 @@
-"""Graphe des zones et connexions."""
-
 from __future__ import annotations
 
 from src.graph.connection import Connection

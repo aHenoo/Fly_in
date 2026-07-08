@@ -18,3 +18,12 @@ dev = [
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["src*"]
+
+[tool.mypy]
+exclude = [
+    "^\\.venv/",
+    "^venv/",
+    "^build/",
+    "^dist/",
+    "^.*\\.egg-info/",
+]

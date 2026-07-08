@@ -1,8 +1,10 @@
 PYTHON := python3
 VENV := .venv
 VENV_PYTHON := $(VENV)/bin/python
-PATH := $(VENV)/bin:$(PATH)
+FLAKE8 := $(VENV)/bin/flake8
+MYPY := $(VENV)/bin/mypy
 MAP := maps/easy/01_linear_path.txt
+VISUAL :=
 
 .PHONY: install run debug clean lint lint-strict fclean
 
@@ -12,10 +14,10 @@ install:
 	$(VENV_PYTHON) -m pip install -e ".[dev]"
 
 run:
-	$(PYTHON) main.py $(MAP)
+	$(PYTHON) main.py $(MAP) $(VISUAL)
 
 debug:
-	$(PYTHON) -m pdb main.py $(MAP)
+	$(PYTHON) -m pdb main.py $(MAP) $(VISUAL)
 
 clean:
 	find . -type d -name "__pycache__" -prune -exec rm -rf {} +
@@ -33,9 +35,9 @@ fclean:
 	find . -type f -name "uv.lock" -delete
 
 lint:
-	flake8 .
-	mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
+	$(FLAKE8) .
+	$(MYPY) . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
 lint-strict:
-	flake8 .
-	mypy . --strict
+	$(FLAKE8) .
+	$(MYPY) . --strict

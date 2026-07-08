@@ -1,5 +1,3 @@
-"""Recherche de chemins sans librairie de graphe."""
-
 from __future__ import annotations
 
 from heapq import heappop, heappush

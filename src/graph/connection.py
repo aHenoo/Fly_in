@@ -1,5 +1,3 @@
-"""Connexion entre deux zones du graphe."""
-
 from __future__ import annotations
 
 

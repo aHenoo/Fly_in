@@ -1,5 +1,3 @@
-"""Simulation tour par tour des drones."""
-
 from __future__ import annotations
 
 from src.algorithm.pathfinder import PathFinder
