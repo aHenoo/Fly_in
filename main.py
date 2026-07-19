@@ -10,17 +10,34 @@ from src.visualization.visualizer import Visualizer
 def main() -> int:
     """Lance le parsing puis la simulation."""
     if len(sys.argv) not in (2, 3):
-        print("usage: python3 main.py <map_file> [--visual]", file=sys.stderr)
+        print(
+            "usage: python3 main.py <map_file> [--visual|--gui]",
+            file=sys.stderr,
+        )
         return 1
-    if len(sys.argv) == 3 and sys.argv[2] != "--visual":
-        print("usage: python3 main.py <map_file> [--visual]", file=sys.stderr)
+    if len(sys.argv) == 3 and sys.argv[2] not in ("--visual", "--gui"):
+        print(
+            "usage: python3 main.py <map_file> [--visual|--gui]",
+            file=sys.stderr,
+        )
         return 1
 
     try:
         parsed_map = Parser().parse_file(sys.argv[1])
         simulation = Simulation(parsed_map.graph, parsed_map.nb_drones)
         visualizer = Visualizer(parsed_map.graph)
-        show_visual = len(sys.argv) == 3
+        mode = sys.argv[2] if len(sys.argv) == 3 else None
+        show_visual = mode == "--visual"
+        if mode == "--gui":
+            from src.visualization.gui import GUIError, SimulationGUI
+
+            try:
+                SimulationGUI(parsed_map.graph, simulation).run()
+            except GUIError as error:
+                raise SimulationError(
+                    f"cannot start graphical interface: {error}",
+                ) from error
+            return 0
         if show_visual:
             print(visualizer.render_header(simulation))
 

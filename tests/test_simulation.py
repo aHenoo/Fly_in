@@ -28,6 +28,22 @@ connection: middle-goal
     assert all(drone.is_delivered() for drone in simulation.drones)
 
 
+def test_public_run_turn_advances_interactive_simulation() -> None:
+    parsed = Parser().parse_text("""
+nb_drones: 1
+start_hub: start 0 0
+end_hub: goal 1 0
+connection: start-goal
+""")
+    simulation = Simulation(parsed.graph, parsed.nb_drones)
+
+    assert not simulation.is_complete()
+    assert simulation.run_turn() == "D1-goal"
+    assert simulation.is_complete()
+    with pytest.raises(SimulationError, match="deja terminee"):
+        simulation.run_turn()
+
+
 def test_stationary_drones_are_omitted() -> None:
     _, output = simulate("""
 nb_drones: 3

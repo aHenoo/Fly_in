@@ -79,6 +79,12 @@ Enable colored visual feedback and turn numbers:
 python3 main.py maps/easy/01_linear_path.txt --visual
 ```
 
+Open the interactive Tkinter graphical interface:
+
+```bash
+python3 main.py maps/easy/02_simple_fork.txt --gui
+```
+
 The map used by `make run` can also be changed on the command line:
 
 ```bash
@@ -281,6 +287,16 @@ the same time.
 Because ANSI escape sequences are only enabled with `--visual`, the standard
 output remains suitable for scripts, automated evaluation, and comparison
 tools.
+
+The optional `--gui` mode opens a Tkinter window that draws connections and
+zones from their map coordinates. It displays drones at their current zones or
+animates them along links while moving. The interface provides manual turn
+advancement,
+automatic playback, pause, speed control, capacities, and delivery progress.
+The `Restart` control resets the simulation and returns every drone to the
+start hub without reopening the map.
+It is an optional graphical aid: the standard evaluator output does not depend
+on Tkinter or on the availability of a display server.
 
 ## Project Structure
 

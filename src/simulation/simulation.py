@@ -40,15 +40,26 @@ class Simulation:
         while not self._all_delivered():
             if turns >= max_turns:
                 raise SimulationError("simulation trop longue")
-            line = self._run_turn()
-            if not line:
-                raise SimulationError("aucun mouvement possible")
+            line = self.run_turn()
             output.append(line)
             turns += 1
             if on_turn is not None:
                 on_turn(turns, line)
 
         return output
+
+    def run_turn(self) -> str:
+        """Execute un seul tour pour les interfaces interactives."""
+        if self._all_delivered():
+            raise SimulationError("simulation deja terminee")
+        line = self._run_turn()
+        if not line:
+            raise SimulationError("aucun mouvement possible")
+        return line
+
+    def is_complete(self) -> bool:
+        """Indique publiquement si tous les drones sont arrives."""
+        return self._all_delivered()
 
     def _create_drones(self) -> list[Drone]:
         """Cree les drones au depart."""
