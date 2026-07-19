@@ -127,8 +127,7 @@ class Parser:
         color = metadata.get("color")
         is_start = prefix == "start_hub:"
         is_end = prefix == "end_hub:"
-        max_drones = self._parse_max_drones(metadata, line_number, is_start,
-                                            is_end)
+        max_drones = self._parse_max_drones(metadata, line_number)
 
         try:
             zone = Zone(name, x, y, zone_type, color, max_drones, metadata)
@@ -141,12 +140,8 @@ class Parser:
         self,
         metadata: dict[str, str],
         line_number: int,
-        is_start: bool,
-        is_end: bool,
     ) -> int:
-        """Parse max_drones, ignore sur start/end."""
-        if is_start or is_end:
-            return 1
+        """Parse et valide max_drones pour tous les types de zones."""
         return self._parse_positive_int(
             metadata.get("max_drones", "1"),
             line_number,
