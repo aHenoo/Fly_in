@@ -258,10 +258,13 @@ machine-friendly default output.
 
 It provides:
 
-- one numbered line per turn;
+- an initial map summary, legend, and list of assigned routes;
+- a separate dashboard for every numbered turn;
+- readable movement descriptions, including multi-turn transit;
+- the current position and status of every drone;
+- zone occupancy with current and maximum capacities;
+- a delivery counter and progress bar;
 - ANSI colors derived from each destination zone's `color` metadata;
-- colored arrival tokens that make routes and simultaneous movements easier to
-  follow;
 - a final colored summary showing the total number of turns.
 
 For example, a drone entering a blue hub is displayed in blue, while entry into
@@ -269,6 +272,11 @@ a red destination is displayed in red. Common names such as `red`, `green`,
 `blue`, `cyan`, `orange`, `gold`, and `purple` are mapped to suitable terminal
 colors. If a color is absent or unsupported, the movement remains readable as
 plain text.
+
+The dashboard makes waiting drones and full bottleneck zones visible, while
+restricted-zone movements explicitly show when a drone is still in transit.
+This provides the context needed to understand why drones do not all move at
+the same time.
 
 Because ANSI escape sequences are only enabled with `--visual`, the standard
 output remains suitable for scripts, automated evaluation, and comparison

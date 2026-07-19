@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from src.algorithm.pathfinder import PathFinder
 from src.graph.connection import Connection
 from src.graph.graph import Graph
@@ -26,7 +28,11 @@ class Simulation:
         for drone in self.drones:
             self.path_index[drone.identifier] = 0
 
-    def run(self, max_turns: int = 10000) -> list[str]:
+    def run(
+        self,
+        max_turns: int = 10000,
+        on_turn: Callable[[int, str], None] | None = None,
+    ) -> list[str]:
         """Lance la simulation et renvoie les lignes de sortie."""
         output: list[str] = []
         turns = 0
@@ -39,6 +45,8 @@ class Simulation:
                 raise SimulationError("aucun mouvement possible")
             output.append(line)
             turns += 1
+            if on_turn is not None:
+                on_turn(turns, line)
 
         return output
 

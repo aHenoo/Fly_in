@@ -21,14 +21,18 @@ def main() -> int:
         simulation = Simulation(parsed_map.graph, parsed_map.nb_drones)
         visualizer = Visualizer(parsed_map.graph)
         show_visual = len(sys.argv) == 3
-        lines = simulation.run()
-        for turn, line in enumerate(lines, 1):
-            if show_visual:
-                print(visualizer.render_turn(turn, line, True))
-            else:
-                print(line)
         if show_visual:
+            print(visualizer.render_header(simulation))
+
+            def display_turn(turn: int, line: str) -> None:
+                print(visualizer.render_dashboard(simulation, turn, line))
+
+            lines = simulation.run(on_turn=display_turn)
             print(visualizer.render_result(len(lines)))
+        else:
+            lines = simulation.run()
+            for line in lines:
+                print(line)
     except (ParseError, SimulationError, ValueError, KeyError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 1
