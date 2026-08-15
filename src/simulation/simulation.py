@@ -22,6 +22,7 @@ class Simulation:
             raise SimulationError("nb_drones doit etre positif")
         self.graph = graph
         self.nb_drones = nb_drones
+        self.last_connection_usage: dict[frozenset[str], int] = {}
         self.drones = self._create_drones()
         self.paths = self._assign_paths()
         self.path_index: dict[int, int] = {}
@@ -123,6 +124,7 @@ class Simulation:
             arrived_ids,
         )
 
+        self.last_connection_usage = connection_usage.copy()
         return " ".join(movements)
 
     def _finish_transits(

@@ -100,21 +100,11 @@ class Visualizer:
             position = self._drone_position(drone)
             lines.append(f"  {drone.get_label():<4} {position}")
 
-        lines.extend(("", "OCCUPIED ZONES"))
-        occupied = self._occupied_zones(simulation)
-        for zone_name, labels in occupied.items():
-            zone = self.graph.get_zone(zone_name)
-            if zone_name in (self.graph.start_name, self.graph.end_name):
-                capacity = "unlimited"
-            else:
-                capacity = f"{len(labels)}/{zone.max_drones}"
-                if len(labels) >= zone.max_drones:
-                    capacity += " FULL"
-            colored_zone = self._color_zone_name(zone_name)
-            lines.append(
-                f"  {colored_zone:<20} [{', '.join(labels)}] "
-                f"capacity {capacity}"
-            )
+        lines.extend((
+            "",
+            "RESOURCE USAGE",
+            self.render_resource_usage(simulation),
+        ))
 
         delivered = sum(
             drone.is_delivered()
@@ -127,6 +117,33 @@ class Visualizer:
             f"  Delivered: {delivered}/{simulation.nb_drones} {progress}",
             separator,
         ))
+        return "\n".join(lines)
+
+    def render_resource_usage(self, simulation: Simulation) -> str:
+        """Affiche l'utilisation des zones et connexions du dernier tour."""
+        lines: list[str] = []
+        occupied = self._occupied_zones(simulation)
+
+        for zone in self.graph.zones.values():
+            used = len(occupied.get(zone.name, []))
+            if zone.name in (self.graph.start_name, self.graph.end_name):
+                capacity = "unlimited"
+            else:
+                capacity = str(zone.max_drones)
+            lines.append(
+                f"Zone {zone.name}: {used}/{capacity} drones"
+            )
+
+        for connection in self.graph.connections.values():
+            used = simulation.last_connection_usage.get(
+                connection.get_key(),
+                0,
+            )
+            lines.append(
+                f"Connection {connection.get_name()}: "
+                f"{used}/{connection.max_link_capacity} capacity used"
+            )
+
         return "\n".join(lines)
 
     def render_line(self, line: str) -> str:

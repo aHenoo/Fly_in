@@ -7,26 +7,36 @@ from src.simulation.simulation import Simulation, SimulationError
 from src.visualization.visualizer import Visualizer
 
 
+VALID_MODES = {"--visual", "--gui"}
+
+
 def main() -> int:
     """Lance le parsing puis la simulation."""
-    if len(sys.argv) not in (2, 3):
+    arguments = sys.argv[1:]
+    if len(arguments) not in (1, 2):
         print(
-            "usage: python3 main.py <map_file> [--visual|--gui]",
+            "usage: python3 main.py [--visual|--gui] <map_file>",
             file=sys.stderr,
         )
         return 1
-    if len(sys.argv) == 3 and sys.argv[2] not in ("--visual", "--gui"):
+
+    if len(arguments) == 2 and arguments[0].startswith("--"):
+        mode, filename = arguments
+    else:
+        filename = arguments[0]
+        mode = arguments[1] if len(arguments) == 2 else None
+
+    if mode is not None and mode not in VALID_MODES:
         print(
-            "usage: python3 main.py <map_file> [--visual|--gui]",
+            "usage: python3 main.py [--visual|--gui] <map_file>",
             file=sys.stderr,
         )
         return 1
 
     try:
-        parsed_map = Parser().parse_file(sys.argv[1])
+        parsed_map = Parser().parse_file(filename)
         simulation = Simulation(parsed_map.graph, parsed_map.nb_drones)
         visualizer = Visualizer(parsed_map.graph)
-        mode = sys.argv[2] if len(sys.argv) == 3 else None
         show_visual = mode == "--visual"
         if mode == "--gui":
             from src.visualization.gui import GUIError, SimulationGUI

@@ -40,6 +40,8 @@ connection: start-goal
     assert not simulation.is_complete()
     assert simulation.run_turn() == "D1-goal"
     assert simulation.is_complete()
+    connection = parsed.graph.get_connection("start", "goal")
+    assert simulation.last_connection_usage[connection.get_key()] == 1
     with pytest.raises(SimulationError, match="deja terminee"):
         simulation.run_turn()
 

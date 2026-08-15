@@ -51,6 +51,7 @@ connection: middle-goal
     assert "TURN 1" in rendered
     assert "D1: entered" in rendered
     assert "DRONE POSITIONS" in rendered
-    assert "OCCUPIED ZONES" in rendered
-    assert "capacity 1/1 FULL" in rendered
+    assert "RESOURCE USAGE" in rendered
+    assert "Zone middle: 1/1 drones" in rendered
+    assert "Connection start-middle: 1/1 capacity used" in rendered
     assert "Delivered: 0/2" in rendered
