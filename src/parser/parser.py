@@ -127,7 +127,10 @@ class Parser:
         color = metadata.get("color")
         is_start = prefix == "start_hub:"
         is_end = prefix == "end_hub:"
-        max_drones = self._parse_max_drones(metadata, line_number)
+        if is_start or is_end:
+            max_drones = 1
+        else:
+            max_drones = self._parse_max_drones(metadata, line_number)
 
         try:
             zone = Zone(name, x, y, zone_type, color, max_drones, metadata)
