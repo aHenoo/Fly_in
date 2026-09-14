@@ -13,6 +13,9 @@ VALID_MODES = {"--visual", "--gui"}
 def main() -> int:
     """Lance le parsing puis la simulation."""
     arguments = sys.argv[1:]
+    mode: str | None
+    filename: str
+
     if len(arguments) not in (1, 2):
         print(
             "usage: python3 main.py [--visual|--gui] <map_file>",
